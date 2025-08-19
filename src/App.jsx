@@ -1,35 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useMemo } from "react";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [number, setNumber] = useState(0);
+  const [dark, setDark] = useState(false);
+
+  function slowFunction(num) {
+    console.log("calling slow function");
+    for (let i = 0; i < 2000000000; i++) {}
+    return num * 2;
+  }
+
+  const themeStyles = {
+    backgroundColor: dark ? "black" : "white",
+    color: dark ? "white" : "black",
+  };
+
+  const doubleNumber = useMemo(() => {
+    return slowFunction(number);
+  }, [number]);
 
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <input
+          type="number"
+          value={number}
+          onChange={(e) => {
+            setNumber(e.target.value);
+          }}
+        />
+        <button
+          onClick={() => {
+            setDark((prev) => !prev);
+          }}
+        >
+          Change theme
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <div style={themeStyles}>{doubleNumber}</div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
